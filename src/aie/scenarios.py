@@ -88,7 +88,7 @@ def run_scenarios(
     if start_timestamp is None:
         start_timestamp = feature_df["datetime"].max() + pd.Timedelta(hours=1)
 
-    ts_index = pd.date_range(start_timestamp, periods=horizon_hours, freq="H")
+    ts_index = pd.date_range(start_timestamp, periods=horizon_hours, freq="h")
     model.eval()
     # Keep dropout stochasticity for ensemble spread.
     for m in model.modules():

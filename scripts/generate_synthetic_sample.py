@@ -32,7 +32,7 @@ COLUMNS = [
 def _fake_year(year: int, include_o3: bool = True) -> pd.DataFrame:
     start = pd.Timestamp(year, 1, 1)
     end = pd.Timestamp(year, 12, 31, 23)
-    ts = pd.date_range(start, end, freq="H")
+    ts = pd.date_range(start, end, freq="h")
     rng = np.random.default_rng(year)
     hour = ts.hour
     doy = ts.dayofyear

@@ -12,7 +12,7 @@ def synthetic_hourly() -> pd.DataFrame:
     """Deterministic 3-month hourly DataFrame matching the canonical schema."""
 
     rng = np.random.default_rng(0)
-    ts = pd.date_range("2018-01-01", "2018-03-31 23:00", freq="H")
+    ts = pd.date_range("2018-01-01", "2018-03-31 23:00", freq="h")
     n = len(ts)
     hour = ts.hour.to_numpy()
     doy = ts.dayofyear.to_numpy()

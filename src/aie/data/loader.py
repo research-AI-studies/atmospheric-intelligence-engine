@@ -132,7 +132,7 @@ def load_raw_excel(path: str | Path) -> pd.DataFrame:
     df = df.sort_values("datetime").drop_duplicates("datetime").reset_index(drop=True)
 
     # Reindex onto a strict hourly grid so downstream code can rely on it.
-    full_index = pd.date_range(df["datetime"].min(), df["datetime"].max(), freq="H")
+    full_index = pd.date_range(df["datetime"].min(), df["datetime"].max(), freq="h")
     df = df.set_index("datetime").reindex(full_index)
     df.index.name = "datetime"
     df = df.reset_index()
