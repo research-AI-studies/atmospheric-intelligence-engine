@@ -9,8 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2026-04-20
 
 ### Added
-- Initial public release accompanying the first submission of the manuscript
-  to *Environmental Science: Atmospheres*.
+- Initial public release accompanying the first submission of the manuscript.
 - `aie` Python package: data ingestion, quality control, feature engineering,
   walk-forward splits, baselines (persistence, XGBoost, LSTM), and the
   Atmospheric Intelligence Engine (AIE) architecture with MC-dropout.
