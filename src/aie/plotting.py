@@ -47,11 +47,7 @@ def save_figure(fig: plt.Figure, path: str | Path) -> None:
 
 def plot_missingness_heatmap(df: pd.DataFrame, out_path: str | Path) -> None:
     cols = [c for c in df.columns if c not in {"datetime", "station_id", "location", "sheet_year"}]
-    grid = (
-        df.set_index("datetime")[cols]
-        .resample("1D")
-        .apply(lambda s: s.isna().mean())
-    )
+    grid = df.set_index("datetime")[cols].resample("1D").apply(lambda s: s.isna().mean())
     fig, ax = plt.subplots(figsize=(10, 4))
     sns.heatmap(grid.T, cmap="magma", vmin=0, vmax=1, cbar_kws={"label": "fraction missing"}, ax=ax)
     ax.set_title("Data availability (daily fraction missing) - Seberang Jaya 2018-2021")
@@ -77,7 +73,17 @@ def plot_diurnal_cycle(df: pd.DataFrame, variable: str, out_path: str | Path) ->
 def plot_correlation_matrix(df: pd.DataFrame, out_path: str | Path) -> None:
     cols = [
         c
-        for c in ("pm10", "pm25", "so2", "no2", "o3", "co", "wind_speed", "temperature", "relative_humidity")
+        for c in (
+            "pm10",
+            "pm25",
+            "so2",
+            "no2",
+            "o3",
+            "co",
+            "wind_speed",
+            "temperature",
+            "relative_humidity",
+        )
         if c in df.columns
     ]
     corr = df[cols].corr()
@@ -92,7 +98,9 @@ def plot_correlation_matrix(df: pd.DataFrame, out_path: str | Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-def plot_skill_vs_horizon(metric_tables: dict[str, pd.DataFrame], metric: str, out_path: str | Path) -> None:
+def plot_skill_vs_horizon(
+    metric_tables: dict[str, pd.DataFrame], metric: str, out_path: str | Path
+) -> None:
     fig, ax = plt.subplots(figsize=(6, 4))
     for name, df in metric_tables.items():
         ax.plot(df["horizon"], df[metric], marker="o", label=name)

@@ -23,7 +23,7 @@ class PersistenceModel:
 
     horizons: list[int]
 
-    def fit(self, *_, **__) -> "PersistenceModel":  # noqa: D401 - trivial
+    def fit(self, *_, **__) -> PersistenceModel:
         return self
 
     def predict(self, targets: np.ndarray) -> np.ndarray:
@@ -86,7 +86,7 @@ class XGBoostForecaster:
         y_train: np.ndarray,
         X_val: pd.DataFrame | None = None,
         y_val: np.ndarray | None = None,
-    ) -> "XGBoostForecaster":
+    ) -> XGBoostForecaster:
         self.feature_names = list(X_train.columns)
         for h in self.horizons:
             y_h = self._shift_target(y_train, h)

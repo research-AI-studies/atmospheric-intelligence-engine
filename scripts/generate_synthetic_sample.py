@@ -44,7 +44,9 @@ def _fake_year(year: int, include_o3: bool = True) -> pd.DataFrame:
     pm10 = np.clip(pm25 * 1.4 + rng.normal(0, 2, ts.size), 1, None)
     so2 = np.clip(0.004 + 0.001 * rng.standard_normal(ts.size), 0, 0.05)
     no2 = np.clip(0.02 + 0.005 * rng.standard_normal(ts.size), 0, 0.2)
-    o3 = np.clip(0.02 + 0.01 * np.sin(2 * np.pi * hour / 24) + 0.004 * rng.standard_normal(ts.size), 0, 0.2)
+    o3 = np.clip(
+        0.02 + 0.01 * np.sin(2 * np.pi * hour / 24) + 0.004 * rng.standard_normal(ts.size), 0, 0.2
+    )
     co = np.clip(0.9 + 0.2 * rng.standard_normal(ts.size), 0, 5)
     wdir = (rng.uniform(0, 360, size=ts.size)) % 360
     wspd = np.clip(1.5 + 0.6 * rng.standard_normal(ts.size), 0, 10)

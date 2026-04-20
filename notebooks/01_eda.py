@@ -25,7 +25,12 @@ import pandas as pd
 
 from aie.data import apply_qc, load_raw_excel
 from aie.config import DataConfig
-from aie.plotting import apply_style, plot_missingness_heatmap, plot_diurnal_cycle, plot_correlation_matrix
+from aie.plotting import (
+    apply_style,
+    plot_missingness_heatmap,
+    plot_diurnal_cycle,
+    plot_correlation_matrix,
+)
 
 apply_style()
 

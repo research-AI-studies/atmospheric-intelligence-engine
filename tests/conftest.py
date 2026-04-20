@@ -16,7 +16,12 @@ def synthetic_hourly() -> pd.DataFrame:
     n = len(ts)
     hour = ts.hour.to_numpy()
     doy = ts.dayofyear.to_numpy()
-    pm25 = 15 + 3 * np.sin(2 * np.pi * hour / 24) + 0.5 * np.sin(2 * np.pi * doy / 366) + rng.normal(0, 2, n)
+    pm25 = (
+        15
+        + 3 * np.sin(2 * np.pi * hour / 24)
+        + 0.5 * np.sin(2 * np.pi * doy / 366)
+        + rng.normal(0, 2, n)
+    )
     pm10 = pm25 * 1.4 + rng.normal(0, 1.5, n)
     df = pd.DataFrame(
         {

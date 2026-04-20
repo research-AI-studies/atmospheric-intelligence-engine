@@ -141,7 +141,9 @@ def load_raw_excel(path: str | Path) -> pd.DataFrame:
     for col in ("station_id", "location"):
         df[col] = df[col].ffill().bfill()
 
-    logger.info("Loaded %d hourly rows from %s to %s", len(df), df["datetime"].min(), df["datetime"].max())
+    logger.info(
+        "Loaded %d hourly rows from %s to %s", len(df), df["datetime"].min(), df["datetime"].max()
+    )
     return df
 
 

@@ -13,7 +13,7 @@ import pandas as pd
 import torch
 from torch.utils.data import DataLoader
 
-from aie.config import ModelConfig, RunConfig, load_config
+from aie.config import RunConfig, load_config
 from aie.data import apply_qc, build_features, load_raw_excel, save_processed, walk_forward_split
 from aie.dataset import SlidingWindowDataset
 from aie.evaluate import per_horizon_metrics
@@ -69,9 +69,7 @@ class Pipeline:
         df = load_raw_excel(self.cfg.data.raw_path)
         df, reports = apply_qc(df, self.cfg.data)
         save_processed(df, self.art.processed_path)
-        pd.DataFrame([r.as_dict() for r in reports]).to_csv(
-            self.out / "qc_report.csv", index=False
-        )
+        pd.DataFrame([r.as_dict() for r in reports]).to_csv(self.out / "qc_report.csv", index=False)
 
         features = build_features(df, self.cfg.features)
         features.to_parquet(self.art.features_path, index=False)
@@ -98,7 +96,7 @@ class Pipeline:
         feature_cols = self._feature_columns(features)
         stats: dict[str, tuple[float, float]] = {}
         out = features.copy()
-        for col in feature_cols + ["target"]:
+        for col in [*feature_cols, "target"]:
             values = out.loc[split_mask, col].astype(float)
             mu = float(np.nanmean(values))
             sd = float(np.nanstd(values))
@@ -176,7 +174,9 @@ class Pipeline:
                     {"state_dict": model.state_dict(), "cfg": mcfg.__dict__},
                     self.art.models_dir / f"{mcfg.name}.pt",
                 )
-                with (self.art.models_dir / f"{mcfg.name}_history.json").open("w", encoding="utf-8") as fh:
+                with (self.art.models_dir / f"{mcfg.name}_history.json").open(
+                    "w", encoding="utf-8"
+                ) as fh:
                     json.dump(history.__dict__, fh, indent=2)
                 models[mcfg.name] = model
             else:
@@ -220,13 +220,13 @@ class Pipeline:
                 pred_std = model.predict(X)  # type: ignore[attr-defined]
                 y_std = standardised.loc[split.test, "target"].to_numpy(dtype=float)
                 y_pred = pred_std * target_sd + target_mu
-                y_true_mat = np.stack(
-                    [np.roll(y_std, -h) for h in horizons], axis=1
-                ) * target_sd + target_mu
+                y_true_mat = (
+                    np.stack([np.roll(y_std, -h) for h in horizons], axis=1) * target_sd + target_mu
+                )
                 mask_mat = np.stack(
                     [np.roll((~np.isnan(y_std)).astype(np.float32), -h) for h in horizons], axis=1
                 )
-                mask_mat[-max(horizons):, :] = 0
+                mask_mat[-max(horizons) :, :] = 0
             else:
                 y_true_mat, y_pred, mask_mat = self._torch_predict(
                     model,  # type: ignore[arg-type]
@@ -256,7 +256,9 @@ class Pipeline:
         if "aie" in models and isinstance(models["aie"], torch.nn.Module):
             self._run_uncertainty(models["aie"], standardised, split, feature_cols, horizons, stats)
 
-        logger.info("Stage 'evaluate' complete: %d rows written to %s", len(metrics), self.art.metrics_path)
+        logger.info(
+            "Stage 'evaluate' complete: %d rows written to %s", len(metrics), self.art.metrics_path
+        )
         return metrics
 
     # --------------------------------------------------------------
@@ -325,15 +327,15 @@ class Pipeline:
         )
         logger.info("Wrote UQ arrays to %s", self.art.uq_path)
 
-    def _reload_models(
-        self, feature_cols: list[str], horizons: list[int]
-    ) -> dict[str, object]:
+    def _reload_models(self, feature_cols: list[str], horizons: list[int]) -> dict[str, object]:
         models: dict[str, object] = {}
         for mcfg in self.cfg.models:
             if mcfg.name == "persistence":
                 models[mcfg.name] = PersistenceModel(horizons=horizons)
             elif mcfg.name == "xgboost":
-                raise RuntimeError("XGBoost models must be retrained; no persistence layer provided.")
+                raise RuntimeError(
+                    "XGBoost models must be retrained; no persistence layer provided."
+                )
             else:
                 path = self.art.models_dir / f"{mcfg.name}.pt"
                 if not path.exists():

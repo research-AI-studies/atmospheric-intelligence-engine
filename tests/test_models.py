@@ -10,7 +10,12 @@ from torch.utils.data import DataLoader
 from aie.config import FeatureConfig, ModelConfig
 from aie.data import build_features
 from aie.dataset import SlidingWindowDataset
-from aie.models import AtmosphericIntelligenceEngine, LSTMForecaster, PersistenceModel, XGBoostForecaster
+from aie.models import (
+    AtmosphericIntelligenceEngine,
+    LSTMForecaster,
+    PersistenceModel,
+    XGBoostForecaster,
+)
 from aie.train import train_model
 
 
@@ -42,7 +47,12 @@ def test_lstm_forward_pass(synthetic_hourly: pd.DataFrame) -> None:
 
 def test_aie_forward_and_mc(synthetic_hourly: pd.DataFrame) -> None:
     model = AtmosphericIntelligenceEngine(
-        n_features=8, n_horizons=2, hidden_size=16, num_tcn_blocks=2, num_transformer_layers=1, n_heads=2
+        n_features=8,
+        n_horizons=2,
+        hidden_size=16,
+        num_tcn_blocks=2,
+        num_transformer_layers=1,
+        n_heads=2,
     )
     x = torch.randn(4, 24, 8)
     out = model(x)
@@ -56,7 +66,7 @@ def test_training_loop_runs(synthetic_hourly: pd.DataFrame) -> None:
     feature_cols = [c for c in feats.columns if c not in {"datetime", "target"}]
     # Normalise to keep training stable.
     normed = feats.copy()
-    for c in feature_cols + ["target"]:
+    for c in [*feature_cols, "target"]:
         s = normed[c].astype(float)
         mu, sd = float(np.nanmean(s)), float(np.nanstd(s)) or 1.0
         normed[c] = (s - mu) / sd
@@ -66,6 +76,8 @@ def test_training_loop_runs(synthetic_hourly: pd.DataFrame) -> None:
     val_loader = DataLoader(ds, batch_size=32, shuffle=False)
 
     model = LSTMForecaster(n_features=len(feature_cols), n_horizons=2, hidden_size=16, num_layers=1)
-    cfg = ModelConfig(name="lstm", horizons=[1, 6], input_window=24, epochs=2, patience=2, batch_size=32, lr=0.01)
+    cfg = ModelConfig(
+        name="lstm", horizons=[1, 6], input_window=24, epochs=2, patience=2, batch_size=32, lr=0.01
+    )
     model, hist = train_model(model, loader, val_loader, cfg, torch.device("cpu"))
     assert len(hist.train_loss) >= 1

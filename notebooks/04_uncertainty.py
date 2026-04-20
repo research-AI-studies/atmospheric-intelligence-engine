@@ -24,7 +24,9 @@ apply_style()
 data = np.load("../artifacts/default/uq.npz")
 
 # %%
-plot_reliability_diagram(data["coverage"], data["levels"], Path("../figures/notebooks/04_reliability"))
+plot_reliability_diagram(
+    data["coverage"], data["levels"], Path("../figures/notebooks/04_reliability")
+)
 
 # %%
 crps = crps_gaussian(data["y_true"].ravel(), data["y_mean"].ravel(), data["y_std"].ravel())

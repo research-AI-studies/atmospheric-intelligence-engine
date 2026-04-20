@@ -128,12 +128,13 @@ def load_config(path: str | Path) -> RunConfig:
     splits = SplitConfig(**raw.get("splits", {}))
     scenarios = ScenarioConfig(**raw.get("scenarios", {}))
     models_raw = raw.get("models")
-    if models_raw:
-        models = [_model_from_dict(m) for m in models_raw]
-    else:
-        models = RunConfig().models
+    models = [_model_from_dict(m) for m in models_raw] if models_raw else RunConfig().models
 
-    top = {k: v for k, v in raw.items() if k not in {"data", "features", "splits", "scenarios", "models"}}
+    top = {
+        k: v
+        for k, v in raw.items()
+        if k not in {"data", "features", "splits", "scenarios", "models"}
+    }
     return RunConfig(
         **top,
         data=data,

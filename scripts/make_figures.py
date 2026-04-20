@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import itertools
 from pathlib import Path
 
 import numpy as np
@@ -108,7 +109,7 @@ def figures_arch(artifacts_dir: Path) -> None:
     for label, x, y, w in boxes:
         ax.add_patch(plt.Rectangle((x, y - 0.15), w, 0.3, fill=False))
         ax.text(x + w / 2, y, label, ha="center", va="center", fontsize=9)
-    for (_, x1, y1, w1), (_, x2, y2, _) in zip(boxes[:-1], boxes[1:], strict=False):
+    for (_, x1, y1, w1), (_, x2, y2, _) in itertools.pairwise(boxes):
         ax.annotate("", xy=(x2, y2), xytext=(x1 + w1, y1), arrowprops={"arrowstyle": "->"})
     ax.axis("off")
     fig.suptitle("Atmospheric Intelligence Engine - architecture schematic")

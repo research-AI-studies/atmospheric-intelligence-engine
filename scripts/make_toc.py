@@ -6,6 +6,7 @@ exactly that size at 600 dpi (PNG) and as vector PDF.
 
 from __future__ import annotations
 
+import itertools
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -50,7 +51,7 @@ def make_toc() -> None:
     for x, y, label in boxes:
         ax2.add_patch(plt.Rectangle((x, y - 0.18), 0.18, 0.36, fill=False, linewidth=0.6))
         ax2.text(x + 0.09, y, label, ha="center", va="center", fontsize=5)
-    for (x1, y1, _), (x2, y2, _) in zip(boxes[:-1], boxes[1:], strict=False):
+    for (x1, y1, _), (x2, y2, _) in itertools.pairwise(boxes):
         ax2.annotate(
             "",
             xy=(x2, y2),
