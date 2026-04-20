@@ -30,7 +30,7 @@ def test_xgboost_fit_predict(synthetic_hourly: pd.DataFrame) -> None:
     feats = build_features(synthetic_hourly, FeatureConfig(lag_hours=[1, 3], rolling_windows=[3]))
     feature_cols = [c for c in feats.columns if c not in {"datetime", "target"}]
     X = feats[feature_cols].fillna(0.0)
-    y = feats["target"].fillna(method="ffill").to_numpy(dtype=float)
+    y = feats["target"].ffill().to_numpy(dtype=float)
     model = XGBoostForecaster(horizons=[1, 6], n_estimators=20, max_depth=3, random_state=0)
     model.fit(X, y)
     preds = model.predict(X)
