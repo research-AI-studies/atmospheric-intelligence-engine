@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+title: "Atmospheric Intelligence Engine (AIE): reference implementation"
+message: >-
+  If you use this software, please cite both the software (using this file)
+  and the accompanying manuscript.
+type: software
+authors:
+  - given-names: TBD
+    family-names: TBD
+    email: ddaydota@gmail.com
+    affiliation: TBD
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+repository-code: "https://github.com/research-AI-studies/atmospheric-intelligence-engine"
+url: "https://github.com/research-AI-studies/atmospheric-intelligence-engine"
+license: MIT
+version: "0.1.0"
+date-released: "2026-04-20"
+keywords:
+  - air quality
+  - forecasting
+  - deep learning
+  - uncertainty quantification
+  - Malaysia
+  - PM2.5
+  - atmospheric science
+preferred-citation:
+  type: article
+  title: >-
+    Self-Optimizing Neural Architectures for Urban Air Quality Forecasting
+    and Exploratory Scenario Analysis: A Case Study of Seberang Jaya,
+    Malaysia (2018-2021)
+  authors:
+    - given-names: TBD
+      family-names: TBD
+  journal: "Environmental Science: Atmospheres"
+  year: 2026
+  doi: "10.1039/TBD"

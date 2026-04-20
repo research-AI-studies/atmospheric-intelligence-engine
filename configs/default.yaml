@@ -1,0 +1,62 @@
+# Default configuration for the Seberang Jaya 2018-2021 experiment.
+experiment_name: seberang_jaya_full
+output_dir: artifacts/default
+device: auto
+seed: 42
+
+data:
+  raw_path: "data/raw/Seberang Jaya, Pulau Pinang_AIR QUALITY 2018-2021.xlsx"
+  processed_path: "data/processed/seberang_jaya_hourly.parquet"
+  station_id: "CA06P"
+  location: "Seberang Jaya, Pulau Pinang"
+  timezone: "Asia/Kuala_Lumpur"
+  max_gap_hours: 6
+
+features:
+  target: pm25
+  lag_hours: [1, 2, 3, 6, 12, 24, 48, 72, 168]
+  rolling_windows: [3, 6, 24]
+  include_calendar: true
+  include_wind_components: true
+
+splits:
+  train_years: [2018, 2019]
+  val_years: [2020]
+  test_years: [2021]
+
+models:
+  - name: persistence
+    horizons: [1, 6, 24, 72, 168]
+    input_window: 168
+  - name: xgboost
+    horizons: [1, 6, 24, 72, 168]
+    input_window: 168
+    xgb_n_estimators: 400
+    xgb_max_depth: 6
+  - name: lstm
+    horizons: [1, 6, 24, 72, 168]
+    input_window: 168
+    hidden_size: 128
+    num_layers: 2
+    dropout: 0.2
+    batch_size: 128
+    epochs: 30
+    lr: 0.001
+    patience: 5
+  - name: aie
+    horizons: [1, 6, 24, 72, 168]
+    input_window: 168
+    hidden_size: 128
+    num_layers: 2
+    dropout: 0.2
+    mc_dropout_samples: 50
+    batch_size: 128
+    epochs: 40
+    lr: 0.001
+    patience: 6
+
+scenarios:
+  horizon_hours: 8760
+  temperature_delta_c: [0.0, 1.0, 2.0]
+  emission_scale: [0.8, 1.0, 1.2]
+  n_members: 20

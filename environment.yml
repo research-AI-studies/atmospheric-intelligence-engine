@@ -1,0 +1,33 @@
+# Conda environment for the Atmospheric Intelligence Engine (AIE).
+#
+# Uses the Alibaba Cloud (AliCloud) mirror for both conda and pip to speed up
+# installation inside Mainland China. If you are outside China and prefer the
+# upstream channels, replace the URLs below with the defaults.
+name: aie
+channels:
+  - https://mirrors.aliyun.com/anaconda/cloud/conda-forge/
+  - https://mirrors.aliyun.com/anaconda/pkgs/main/
+  - defaults
+dependencies:
+  - python=3.11
+  - pip>=24.0
+  - numpy>=1.26,<2.0
+  - pandas>=2.1
+  - scipy>=1.11
+  - scikit-learn>=1.4
+  - xgboost>=2.0
+  - pytorch>=2.2
+  - cpuonly  # remove when GPU wheels are desired; use pytorch-cuda=12.1 instead
+  - matplotlib>=3.8
+  - seaborn>=0.13
+  - pyyaml>=6.0
+  - tqdm>=4.66
+  - jupyterlab>=4.0
+  - openpyxl>=3.1
+  - pyarrow>=15.0
+  - rich>=13.7
+  - pytest>=8.0
+  - pip:
+      - --index-url=https://mirrors.aliyun.com/pypi/simple/
+      - jupytext>=1.16
+      - properscoring>=0.1

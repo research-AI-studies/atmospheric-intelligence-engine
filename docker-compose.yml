@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  aie:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: aie:latest
+    container_name: aie
+    working_dir: /work
+    volumes:
+      - ./:/work
+    command: ["make", "smoke"]
+
+  aie-gpu:
+    image: pytorch/pytorch:2.2.2-cuda12.1-cudnn8-runtime
+    container_name: aie-gpu
+    working_dir: /work
+    environment:
+      PIP_INDEX_URL: https://mirrors.aliyun.com/pypi/simple/
+      PIP_TRUSTED_HOST: mirrors.aliyun.com
+    volumes:
+      - ./:/work
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    command: >-
+      bash -lc "pip install -e .[dev] && make all"

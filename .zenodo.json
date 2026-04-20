@@ -1,0 +1,34 @@
+{
+  "title": "Atmospheric Intelligence Engine (AIE): reference implementation for urban air quality forecasting (Seberang Jaya, Malaysia, 2018-2021)",
+  "description": "<p>Reference implementation accompanying the manuscript <em>Self-Optimizing Neural Architectures for Urban Air Quality Forecasting and Scenario Analysis: A Case Study of Seberang Jaya, Malaysia (2018-2021)</em>, submitted to <em>Environmental Science: Atmospheres</em> (RSC).</p><p>Includes an end-to-end pipeline for hourly multi-horizon forecasting (1 h - 168 h), the Atmospheric Intelligence Engine neural architecture with MC-dropout uncertainty quantification, strong baselines (persistence, XGBoost, LSTM), a scenario sensitivity module, and all scripts required to regenerate every figure and table in the manuscript.</p><p>The raw observational dataset is governed by a data-use agreement and is not bundled with this archive; a deterministic synthetic sample is included for continuous integration.</p>",
+  "creators": [
+    {
+      "name": "TBD, TBD",
+      "affiliation": "TBD",
+      "orcid": "0000-0000-0000-0000"
+    }
+  ],
+  "upload_type": "software",
+  "access_right": "open",
+  "license": "MIT",
+  "keywords": [
+    "air quality",
+    "PM2.5",
+    "deep learning",
+    "LSTM",
+    "uncertainty quantification",
+    "MC-dropout",
+    "atmospheric science",
+    "Malaysia",
+    "Southeast Asia",
+    "reproducibility"
+  ],
+  "communities": [],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/research-AI-studies/atmospheric-intelligence-engine",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    }
+  ]
+}
