@@ -11,7 +11,7 @@ Reference implementation for the manuscript
 > **Self-Optimizing Neural Architectures for Urban Air Quality Forecasting and
 > Exploratory Scenario Analysis: A Case Study of Seberang Jaya, Malaysia
 > (2018–2021).**
-> *Submitted to Environmental Science: Atmospheres (RSC).*
+> 
 
 This repository provides:
 
