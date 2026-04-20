@@ -200,7 +200,7 @@ If you use this code, please cite both the software and the manuscript:
 
 ```bibtex
 @software{aie_software_2026,
-  author       = {TBD},
+  author       = {Huang, Hai and Chen, Tet-Khuan and Lai, Ngan-Kuen and Lv, Wei and Liang, Zhan-Fan},
   title        = {Atmospheric Intelligence Engine (AIE): reference implementation},
   year         = 2026,
   publisher    = {Zenodo},

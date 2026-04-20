@@ -5,9 +5,9 @@ to turn this repository into a citable Zenodo deposit. **Every command is
 run on your own machine, under your own credentials — no secrets are shared
 with any AI agent or third party.**
 
-All placeholders marked `TBD` in these files must be filled in before the
-first push. A quick search-and-replace for `TBD` will surface every remaining
-one.
+Only DOI-related placeholders remain. They are filled in **after** Zenodo
+issues the DOI (see Phase 4 below). A quick search-and-replace for `TBD`
+will surface every one.
 
 ---
 
@@ -15,12 +15,10 @@ one.
 
 - [ ] Confirm that the raw Excel file (`data/raw/Seberang Jaya, ... .xlsx`) is
       **not** tracked by git (`.gitignore` already excludes `data/raw/`).
-- [ ] Replace every `TBD` in the following files with real values:
-  - [ ] `README.md` (author block in the `Citation` section)
-  - [ ] `LICENSE` (copyright line)
-  - [ ] `CITATION.cff` (authors, affiliation, ORCID)
-  - [ ] `.zenodo.json` (creators)
-  - [ ] `pyproject.toml` (`authors` field)
+- [x] Author block, affiliations, and emails populated in:
+      `README.md`, `LICENSE`, `CITATION.cff`, `.zenodo.json`, `pyproject.toml`.
+- [ ] (Optional) Add ORCID iDs to `CITATION.cff` and `.zenodo.json` once
+      every co-author has registered one at <https://orcid.org>.
 - [ ] Confirm the manuscript title on top of `README.md` matches the final
       submitted title.
 - [ ] Run the full test + smoke pipeline locally:

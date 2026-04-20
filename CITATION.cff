@@ -5,11 +5,31 @@ message: >-
   and the accompanying manuscript.
 type: software
 authors:
-  - given-names: TBD
-    family-names: TBD
-    email: ddaydota@gmail.com
-    affiliation: TBD
-    orcid: "https://orcid.org/0000-0000-0000-0000"
+  - given-names: Hai
+    family-names: Huang
+    email: yellow.sea@live.cn
+    affiliation: "Zhuhai College of Science and Technology, China"
+  - given-names: Tet-Khuan
+    family-names: Chen
+    email: tet.khuan@apu.edu.my
+    affiliation: "Asia Pacific University of Technology & Innovation, Malaysia"
+  - given-names: Ngan-Kuen
+    family-names: Lai
+    email: ngan.kuen@apu.edu.my
+    affiliation: "Asia Pacific University of Technology & Innovation, Malaysia"
+  - given-names: Wei
+    family-names: Lv
+    email: luwei@zcst.edu.cn
+    affiliation: "Zhuhai College of Science and Technology, China"
+  - given-names: Zhan-Fan
+    family-names: Liang
+    email: zhanfanfan419@foxmail.com
+    affiliation: "Zhuhai College of Science and Technology, China"
+contact:
+  - given-names: Hai
+    family-names: Huang
+    email: yellow.sea@live.cn
+    affiliation: "Zhuhai College of Science and Technology, China"
 repository-code: "https://github.com/research-AI-studies/atmospheric-intelligence-engine"
 url: "https://github.com/research-AI-studies/atmospheric-intelligence-engine"
 license: MIT
@@ -30,8 +50,16 @@ preferred-citation:
     and Exploratory Scenario Analysis: A Case Study of Seberang Jaya,
     Malaysia (2018-2021)
   authors:
-    - given-names: TBD
-      family-names: TBD
+    - given-names: Hai
+      family-names: Huang
+    - given-names: Tet-Khuan
+      family-names: Chen
+    - given-names: Ngan-Kuen
+      family-names: Lai
+    - given-names: Wei
+      family-names: Lv
+    - given-names: Zhan-Fan
+      family-names: Liang
   journal: "Environmental Science: Atmospheres"
   year: 2026
   doi: "10.1039/TBD"

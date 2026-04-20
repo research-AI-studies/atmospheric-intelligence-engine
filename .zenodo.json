@@ -3,9 +3,24 @@
   "description": "<p>Reference implementation accompanying the manuscript <em>Self-Optimizing Neural Architectures for Urban Air Quality Forecasting and Scenario Analysis: A Case Study of Seberang Jaya, Malaysia (2018-2021)</em>, submitted to <em>Environmental Science: Atmospheres</em> (RSC).</p><p>Includes an end-to-end pipeline for hourly multi-horizon forecasting (1 h - 168 h), the Atmospheric Intelligence Engine neural architecture with MC-dropout uncertainty quantification, strong baselines (persistence, XGBoost, LSTM), a scenario sensitivity module, and all scripts required to regenerate every figure and table in the manuscript.</p><p>The raw observational dataset is governed by a data-use agreement and is not bundled with this archive; a deterministic synthetic sample is included for continuous integration.</p>",
   "creators": [
     {
-      "name": "TBD, TBD",
-      "affiliation": "TBD",
-      "orcid": "0000-0000-0000-0000"
+      "name": "Huang, Hai",
+      "affiliation": "Zhuhai College of Science and Technology, China"
+    },
+    {
+      "name": "Chen, Tet-Khuan",
+      "affiliation": "Asia Pacific University of Technology & Innovation, Malaysia"
+    },
+    {
+      "name": "Lai, Ngan-Kuen",
+      "affiliation": "Asia Pacific University of Technology & Innovation, Malaysia"
+    },
+    {
+      "name": "Lv, Wei",
+      "affiliation": "Zhuhai College of Science and Technology, China"
+    },
+    {
+      "name": "Liang, Zhan-Fan",
+      "affiliation": "Zhuhai College of Science and Technology, China"
     }
   ],
   "upload_type": "software",

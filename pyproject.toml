@@ -9,7 +9,14 @@ description = "Atmospheric Intelligence Engine: reference implementation for urb
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
-authors = [{ name = "TBD", email = "ddaydota@gmail.com" }]
+authors = [
+    { name = "Hai Huang", email = "yellow.sea@live.cn" },
+    { name = "Tet-Khuan Chen", email = "tet.khuan@apu.edu.my" },
+    { name = "Ngan-Kuen Lai", email = "ngan.kuen@apu.edu.my" },
+    { name = "Wei Lv", email = "luwei@zcst.edu.cn" },
+    { name = "Zhan-Fan Liang", email = "zhanfanfan419@foxmail.com" },
+]
+maintainers = [{ name = "Hai Huang", email = "yellow.sea@live.cn" }]
 keywords = [
     "air quality",
     "deep learning",
