@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Data License: CC BY 4.0](https://img.shields.io/badge/Data%20License-CC%20BY%204.0-lightgrey.svg)](LICENSE-data)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.TBD.svg)](https://doi.org/10.5281/zenodo.TBD)
+[![DOI](https://zenodo.org/badge/1215887446.svg)](https://doi.org/10.5281/zenodo.19662860)
 
 Reference implementation for the manuscript
 
@@ -204,7 +204,7 @@ If you use this code, please cite both the software and the manuscript:
   title        = {Atmospheric Intelligence Engine (AIE): reference implementation},
   year         = 2026,
   publisher    = {Zenodo},
-  doi          = {10.5281/zenodo.TBD},
+  doi          = {10.5281/zenodo.19662860},
   url          = {https://github.com/research-AI-studies/atmospheric-intelligence-engine}
 }
 ```

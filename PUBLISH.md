@@ -71,59 +71,61 @@ will surface every one.
 
 ---
 
-## Phase 3 — Reserve a DOI before submission
+## Phase 3 — Cut the first GitHub release
 
-RSC requires the DOI to appear in the Data Availability Statement of the
-submitted manuscript. Reserve it **before** creating the first GitHub release:
+Zenodo's current GitHub integration mints the DOI automatically when it
+receives the release webhook. You do not pre-reserve; you publish first and
+embed the returned DOI afterwards.
 
-1. Go to Zenodo → **Upload** → **New upload**.
-2. Fill in the metadata so it matches `.zenodo.json`:
-   - Upload type: **Software**
-   - Title: as in `.zenodo.json`
-   - Authors: as in `.zenodo.json`
-   - Description: as in `.zenodo.json`
-   - License: **MIT**
-3. Under **Basic information → DOI**, click **Reserve DOI**.
-4. Copy the reserved DOI (e.g. `10.5281/zenodo.1234567`). **Do not publish
-   yet.**
-5. In this repository, replace every remaining `10.5281/zenodo.TBD` with the
-   reserved DOI:
+1. On GitHub, open **Releases → Draft a new release**.
+2. Tag: `v0.1.0` (matches `pyproject.toml` and `CITATION.cff`).
+3. Target: `main`.
+4. Title: `v0.1.0 – Initial public release`.
+5. Release notes: a short description of the deposit (see the actual release
+   for the exact text).
+6. Leave **Set as a pre-release** unchecked. Do not attach any binaries.
+7. Click **Publish release**.
 
-   - `README.md` (badge and BibTeX)
-   - `CITATION.cff` (`doi` field if present)
-6. Commit and push:
+Within 1–3 minutes Zenodo will archive the release automatically and expose
+two DOIs on the record page:
 
-   ```bash
-   git commit -am "docs: insert reserved Zenodo DOI"
-   git push
-   ```
-
-7. Add the same DOI to the manuscript's **Data Availability Statement** and
-   references list before you submit to the journal.
+- **Concept DOI** — stable across all future versions (what you cite in the
+  manuscript).
+- **Version DOI** — points only at this specific release.
 
 ---
 
-## Phase 4 — Cut the first GitHub release
+## Phase 4 — Embed the DOI in the repository
 
-Once the DOI is inserted and CI is green:
+Once Zenodo has published the record:
 
-1. On GitHub, open **Releases → Draft a new release**.
-2. Tag: `v0.1.0` (must match the version in `pyproject.toml`, `CITATION.cff`,
-   and `CHANGELOG.md`).
-3. Title: `v0.1.0 — initial submission to Environmental Science: Atmospheres`.
-4. Description: paste the `[0.1.0]` section of `CHANGELOG.md`.
-5. Click **Publish release**.
+1. Copy the **Concept DOI** from the Zenodo record (e.g. `10.5281/zenodo.19662860`).
+2. Replace every remaining `10.5281/zenodo.TBD` in the repo:
 
-Zenodo will detect the release within a few minutes and **complete** the
-deposit that was reserved in Phase 3, assigning it the DOI you already
-embedded in the code and manuscript.
+   - `README.md` (DOI badge and BibTeX)
+   - `CITATION.cff` (`identifiers` block)
+3. Commit and push, then optionally cut a patch release (`v0.1.1`) so the
+   DOI is baked into the archived tarball as well:
+
+   ```bash
+   git commit -am "docs: insert Zenodo concept DOI"
+   git push
+   ```
+
+4. Add the same DOI to the manuscript's **Data Availability Statement** and
+   references list before submission:
+
+   > The model code, trained parameters, deterministic synthetic sample, and
+   > scripts required to reproduce every figure are archived on Zenodo at
+   > https://doi.org/10.5281/zenodo.19662860 (concept DOI, resolves to the
+   > latest archived version).
 
 ---
 
 ## Phase 5 — Verify
 
-- [ ] The Zenodo record for the reserved DOI now shows state "Published" with
-      your release archive attached.
+- [ ] The Zenodo record shows state "Published" with the GitHub archive
+      attached.
 - [ ] The DOI badge at the top of `README.md` resolves to the record.
 - [ ] GitHub Actions CI is green on `main`.
 - [ ] `pip install git+https://github.com/research-AI-studies/atmospheric-intelligence-engine.git@v0.1.0`
