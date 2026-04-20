@@ -135,6 +135,8 @@ class Pipeline:
                     random_state=mcfg.seed,
                 )
                 booster.fit(X_train, y_train, X_val, y_val)
+                with (self.art.models_dir / "xgboost.pkl").open("wb") as fh:
+                    pickle.dump(booster, fh)
                 models[mcfg.name] = booster
             elif mcfg.name in {"lstm", "aie"}:
                 train_ds = SlidingWindowDataset(
@@ -333,9 +335,12 @@ class Pipeline:
             if mcfg.name == "persistence":
                 models[mcfg.name] = PersistenceModel(horizons=horizons)
             elif mcfg.name == "xgboost":
-                raise RuntimeError(
-                    "XGBoost models must be retrained; no persistence layer provided."
-                )
+                path = self.art.models_dir / "xgboost.pkl"
+                if not path.exists():
+                    logger.warning("Skipping xgboost: pickle missing at %s", path)
+                    continue
+                with path.open("rb") as fh:
+                    models[mcfg.name] = pickle.load(fh)
             else:
                 path = self.art.models_dir / f"{mcfg.name}.pt"
                 if not path.exists():
@@ -367,9 +372,10 @@ def run_from_yaml(config_path: str, stage: str = "all") -> None:
     configure_logging()
     cfg = load_config(config_path)
     pipeline = Pipeline(cfg)
+    trained: dict[str, object] | None = None
     if stage in ("data", "all"):
         pipeline.run_data()
     if stage in ("train", "all"):
-        pipeline.run_train()
+        trained = pipeline.run_train()
     if stage in ("evaluate", "all"):
-        pipeline.run_evaluate()
+        pipeline.run_evaluate(trained)
