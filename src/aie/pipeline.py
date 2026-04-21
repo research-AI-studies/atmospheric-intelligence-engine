@@ -20,6 +20,7 @@ from aie.evaluate import per_horizon_metrics
 from aie.models.aie import AtmosphericIntelligenceEngine
 from aie.models.baselines import PersistenceModel, XGBoostForecaster
 from aie.models.lstm import LSTMForecaster
+from aie.scenarios import run_scenarios
 from aie.train import train_model
 from aie.uncertainty import mc_dropout_forecast, reliability_diagram
 from aie.utils import configure_logging, ensure_dir, resolve_device, set_seed
@@ -210,13 +211,18 @@ class Pipeline:
         for name, model in models.items():
             logger.info("Evaluating %s", name)
             if name == "persistence":
-                y = standardised.loc[split.test, "target"].to_numpy(dtype=float)
-                pred_std = model.predict(y)  # type: ignore[attr-defined]
-                y_true = y.reshape(-1, 1) * target_sd + target_mu
+                y_std = standardised.loc[split.test, "target"].to_numpy(dtype=float)
+                pred_std = model.predict(y_std)  # type: ignore[attr-defined]
                 y_pred = pred_std * target_sd + target_mu
-                mask = (~np.isnan(features.loc[split.test, "target"].to_numpy())).astype(np.float32)
-                mask_mat = np.repeat(mask.reshape(-1, 1), len(horizons), axis=1)
-                y_true_mat = np.repeat(y_true, len(horizons), axis=1)
+                y_true_mat = (
+                    np.stack([np.roll(y_std, -h) for h in horizons], axis=1) * target_sd
+                    + target_mu
+                )
+                mask_mat = np.stack(
+                    [np.roll((~np.isnan(y_std)).astype(np.float32), -h) for h in horizons],
+                    axis=1,
+                )
+                mask_mat[-max(horizons) :, :] = 0
             elif name == "xgboost":
                 X = standardised.loc[split.test, feature_cols].reset_index(drop=True)
                 pred_std = model.predict(X)  # type: ignore[attr-defined]
@@ -329,6 +335,55 @@ class Pipeline:
         )
         logger.info("Wrote UQ arrays to %s", self.art.uq_path)
 
+    # --------------------------------------------------------------
+    # Stage: scenarios
+    # --------------------------------------------------------------
+    def run_scenarios(self, models: dict[str, object] | None = None) -> pd.DataFrame:
+        features = self._load_features()
+        split = walk_forward_split(features, self.cfg.splits)
+        standardised, stats = self._standardise(features, split.train)
+        feature_cols = self._feature_columns(standardised)
+        horizons = self.cfg.models[0].horizons
+
+        if models is None:
+            models = self._reload_models(feature_cols, horizons)
+        if "aie" not in models or not isinstance(models["aie"], torch.nn.Module):
+            logger.warning("Scenarios skipped: AIE model not available.")
+            return pd.DataFrame()
+
+        mcfg = next(m for m in self.cfg.models if m.name == "aie")
+        results = run_scenarios(
+            model=models["aie"],
+            feature_df=standardised,
+            feature_cols=feature_cols,
+            horizons=horizons,
+            input_window=mcfg.input_window,
+            temperature_deltas=self.cfg.scenarios.temperature_delta_c,
+            emission_scales=self.cfg.scenarios.emission_scale,
+            horizon_hours=self.cfg.scenarios.horizon_hours,
+            n_members=self.cfg.scenarios.n_members,
+            device=self.device,
+        )
+
+        target_mu, target_sd = stats["target"]
+        rows: list[dict[str, object]] = []
+        for r in results:
+            for t, mean, p10, p90 in zip(r.timestamps, r.mean, r.p10, r.p90, strict=True):
+                rows.append(
+                    {
+                        "scenario": r.label,
+                        "timestamp": t,
+                        "mean": mean * target_sd + target_mu,
+                        "p10": p10 * target_sd + target_mu,
+                        "p90": p90 * target_sd + target_mu,
+                    }
+                )
+        df = pd.DataFrame(rows)
+        out_path = self.out / "scenarios.csv"
+        df.to_csv(out_path, index=False)
+        logger.info("Stage 'scenarios' complete: %d rows written to %s", len(df), out_path)
+        return df
+
     def _reload_models(self, feature_cols: list[str], horizons: list[int]) -> dict[str, object]:
         models: dict[str, object] = {}
         for mcfg in self.cfg.models:
@@ -379,3 +434,5 @@ def run_from_yaml(config_path: str, stage: str = "all") -> None:
         trained = pipeline.run_train()
     if stage in ("evaluate", "all"):
         pipeline.run_evaluate(trained)
+    if stage in ("scenarios", "all"):
+        pipeline.run_scenarios(trained)

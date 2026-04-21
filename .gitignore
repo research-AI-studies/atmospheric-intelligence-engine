@@ -52,6 +52,8 @@ Thumbs.db
 *.ipynb_checkpoints
 
 # --- Project-specific ---
+# Local-only environment overrides
+environment.local.yml
 # Never commit raw observational data
 data/raw/
 data/processed/
