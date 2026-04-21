@@ -90,12 +90,14 @@ class XGBoostForecaster:
         self.feature_names = list(X_train.columns)
         for h in self.horizons:
             y_h = self._shift_target(y_train, h)
-            mask = ~np.isnan(y_h) & ~np.isnan(X_train.values).any(axis=1)
+            # XGBoost handles NaN features natively (missing-value branch).
+            # We only need to drop rows where the TARGET is NaN.
+            mask = ~np.isnan(y_h)
             booster = xgb.XGBRegressor(**self._params)
             eval_set = None
             if X_val is not None and y_val is not None:
                 y_v = self._shift_target(y_val, h)
-                vmask = ~np.isnan(y_v) & ~np.isnan(X_val.values).any(axis=1)
+                vmask = ~np.isnan(y_v)
                 if vmask.any():
                     eval_set = [(X_val.values[vmask], y_v[vmask])]
             booster.fit(
@@ -105,14 +107,13 @@ class XGBoostForecaster:
                 verbose=False,
             )
             self.boosters[h] = booster
-            logger.info("XGBoost horizon %d: trained on %d rows", h, mask.sum())
+            logger.info("XGBoost horizon %d: trained on %d rows", h, int(mask.sum()))
         return self
 
     def predict(self, X: pd.DataFrame) -> np.ndarray:
-        out = np.full((len(X), len(self.horizons)), np.nan, dtype=float)
+        out = np.empty((len(X), len(self.horizons)), dtype=float)
         Xv = X.values
-        row_valid = ~np.isnan(Xv).any(axis=1)
         for j, h in enumerate(self.horizons):
             booster = self.boosters[h]
-            out[row_valid, j] = booster.predict(Xv[row_valid])
+            out[:, j] = booster.predict(Xv)
         return out
