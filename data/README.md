@@ -9,9 +9,9 @@ data/raw/Seberang Jaya, Pulau Pinang_AIR QUALITY 2018-2021.xlsx
 ```
 
 The raw file is **not** redistributed with this repository because it was
-provided under a research-use agreement with the Malaysian Department of
-Environment / Malaysia Meteorological Department. Bona fide research requests
-should be directed to the corresponding author.
+provided under a research-use agreement with the Department of Environment
+Malaysia (DOE / Jabatan Alam Sekitar). Bona fide research requests should be
+directed to the corresponding author.
 
 ## `data/sample/`
 

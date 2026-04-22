@@ -225,7 +225,7 @@ governed by the provider's data-use agreement; see [Data](#data).
 
 ## Acknowledgements
 
-The authors thank the Malaysian Department of Environment and the Malaysia
-Meteorological Department for providing the monitoring-station data used in
-this study. Computational resources and funding acknowledgements are listed in
-the manuscript.
+The authors thank the Department of Environment Malaysia (DOE / Jabatan Alam
+Sekitar) for providing the monitoring-station data used in this study.
+Computational resources and funding acknowledgements are listed in the
+manuscript.

@@ -56,6 +56,15 @@ Thumbs.db
 environment.local.yml
 # Never commit raw observational data
 data/raw/
+# Never commit manuscript drafts / private working copies
+# (canonical location: D:\Downloads\Research\SCI\Air Quality\Paper 2\private)
+manuscript*.md
+manuscript*.txt
+manuscript*.docx
+docs/manuscript_*.md
+docs/manuscript_*.txt
+docs/manuscript_*.docx
+private/
 data/processed/
 data/interim/
 data/external/
