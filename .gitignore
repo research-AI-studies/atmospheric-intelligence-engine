@@ -72,6 +72,8 @@ data/external/
 figures/generated/
 # Local-only paper-visual generator (outputs are private; do not distribute)
 scripts/make_paper_visuals.py
+# Local-only ablation runner (produces manuscript-bound Figure 10 / Table 7)
+scripts/run_ablation.py
 # Model artefacts
 artifacts/
 runs/

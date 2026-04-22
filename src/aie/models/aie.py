@@ -93,24 +93,38 @@ class AtmosphericIntelligenceEngine(nn.Module):
         num_transformer_layers: int = 2,
         n_heads: int = 4,
         dropout: float = 0.2,
+        use_dilation: bool = True,
+        use_transformer: bool = True,
     ) -> None:
         super().__init__()
+        self.use_dilation = use_dilation
+        self.use_transformer = use_transformer
         self.input_proj = nn.Linear(n_features, hidden_size)
         self.tcn = nn.ModuleList(
             [
-                TemporalConvBlock(hidden_size, kernel_size=3, dilation=2**i, dropout=dropout)
+                TemporalConvBlock(
+                    hidden_size,
+                    kernel_size=3,
+                    dilation=(2**i) if use_dilation else 1,
+                    dropout=dropout,
+                )
                 for i in range(num_tcn_blocks)
             ]
         )
-        encoder_layer = nn.TransformerEncoderLayer(
-            d_model=hidden_size,
-            nhead=n_heads,
-            dim_feedforward=hidden_size * 4,
-            dropout=dropout,
-            batch_first=True,
-            activation="gelu",
-        )
-        self.transformer = nn.TransformerEncoder(encoder_layer, num_layers=num_transformer_layers)
+        if use_transformer and num_transformer_layers > 0:
+            encoder_layer = nn.TransformerEncoderLayer(
+                d_model=hidden_size,
+                nhead=n_heads,
+                dim_feedforward=hidden_size * 4,
+                dropout=dropout,
+                batch_first=True,
+                activation="gelu",
+            )
+            self.transformer: nn.Module = nn.TransformerEncoder(
+                encoder_layer, num_layers=num_transformer_layers
+            )
+        else:
+            self.transformer = nn.Identity()
         self.grn = GatedResidualNetwork(hidden_size, dropout)
         self.head = nn.Linear(hidden_size, n_horizons)
         self._frozen_state: dict[str, torch.Tensor] | None = None
