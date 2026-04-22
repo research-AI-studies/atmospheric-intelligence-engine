@@ -70,6 +70,8 @@ data/interim/
 data/external/
 # Generated figures (except the committed TOC and architecture placeholders)
 figures/generated/
+# Local-only paper-visual generator (outputs are private; do not distribute)
+scripts/make_paper_visuals.py
 # Model artefacts
 artifacts/
 runs/
