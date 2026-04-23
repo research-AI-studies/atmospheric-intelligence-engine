@@ -62,8 +62,8 @@ will surface every one.
 ## Phase 2 — Link GitHub and Zenodo
 
 1. Log into <https://zenodo.org> with the account **`research-AI-studies`**
-   (sign up if you have not yet; use email `ddaydota@gmail.com`). Link your
-   ORCID from the Zenodo profile page.
+   (sign up if you have not yet, using the corresponding author's email).
+   Link your ORCID from the Zenodo profile page.
 2. Open <https://zenodo.org/account/settings/github/>.
 3. Click **Sync now** so Zenodo refreshes the repository list.
 4. Toggle the switch next to **`research-AI-studies/atmospheric-intelligence-engine`**

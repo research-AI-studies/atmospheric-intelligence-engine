@@ -53,9 +53,9 @@ keywords:
 preferred-citation:
   type: article
   title: >-
-    Self-Optimizing Neural Architectures for Urban Air Quality Forecasting
-    and Exploratory Scenario Analysis: A Case Study of Seberang Jaya,
-    Malaysia (2018-2021)
+    Multi-horizon forecasting of urban PM2.5 with a dilated
+    temporal-convolution and transformer hybrid: skill, calibrated
+    uncertainty, and driver sensitivity at a tropical Malaysian site
   authors:
     - given-names: Hai
       family-names: Huang

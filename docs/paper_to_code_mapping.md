@@ -1,40 +1,51 @@
 # Paper-to-code mapping
 
-This document traces each manuscript artefact (figure, table, or textual
-claim) back to the exact script, module, or notebook that produces it.
-Reviewers can use this table to verify reproducibility.
+This document traces each manuscript artefact back to the pipeline artefact
+and the plotting script that produces it. Reviewers can use this table to
+verify reproducibility.
 
-## Figures
+## How the manuscript artefacts are produced
 
-| Manuscript | Script / notebook | Output file(s) |
-|------------|-------------------|----------------|
-| Fig. 1 — Study area map           | Manually prepared (outside the code repo) | `figures/static/fig_study_area.pdf` |
-| Fig. 2 — Data availability heatmap | `scripts/make_figures.py eda`            | `figures/generated/fig01_missingness.{png,pdf}` |
-| Fig. 3 — Diurnal and seasonal cycles | `scripts/make_figures.py eda`          | `figures/generated/fig02_diurnal_*.{png,pdf}` |
-| Fig. 4 — Correlation matrix        | `scripts/make_figures.py eda`           | `figures/generated/fig03_correlation.{png,pdf}` |
-| Fig. 5 — Architecture schematic    | `scripts/make_figures.py arch`          | `figures/generated/fig_arch.{png,pdf}` |
-| Fig. 6 — Forecast skill vs. horizon (RMSE) | `scripts/make_figures.py skill` | `figures/generated/fig04_skill_rmse.{png,pdf}` |
-| Fig. 7 — Predicted vs. observed (AIE, h = 24) | `scripts/make_figures.py skill` | `figures/generated/fig05_aie_h24_scatter.{png,pdf}` |
-| Fig. 8 — Reliability diagram (MC-dropout) | `scripts/make_figures.py uq`        | `figures/generated/fig06_reliability.{png,pdf}` |
-| Fig. 9 — Exploratory scenarios     | `scripts/run_pipeline.py --stage scenarios` + `notebooks/05_scenarios.py` | `figures/notebooks/05_scenarios.{png,pdf}` |
-| TOC graphic (8 cm × 4 cm)          | `scripts/make_toc.py`                   | `figures/generated/toc_graphic.{png,pdf}` |
+All quantitative results in the manuscript derive from the single
+orchestrated run `make all`, which executes:
 
-## Tables
+1. `make data` — raw Excel ingestion, quality control, feature engineering,
+   and walk-forward partitioning. Outputs into `data/processed/`.
+2. `make train` — training of the baselines (persistence, XGBoost, LSTM)
+   and the Atmospheric Intelligence Engine (AIE). Trained-model checkpoints
+   and training histories are saved under `artifacts/default/models/`.
+3. `make evaluate` — per-horizon metrics, calibration and reliability
+   diagnostics, and per-model prediction dumps. Saved under
+   `artifacts/default/metrics.csv`, `artifacts/default/uq.npz`, and
+   `artifacts/default/predictions/`.
+4. `make scenarios` — exploratory driver-sensitivity scenario analysis.
+   Saved as `artifacts/default/scenarios.csv`.
 
-| Manuscript | Source |
-|------------|--------|
-| Table 1 — Summary of observational dataset | `src/aie/data/loader.py` (`load_raw_excel`) + `notebooks/01_eda.py` |
-| Table 2 — Per-horizon metrics              | `artifacts/default/metrics.csv` (via `scripts/make_figures.py table`) |
-| Table 3 — Calibration scores (coverage, CRPS) | `artifacts/default/uq.npz` + `notebooks/04_uncertainty.py` |
+Figures and tables are then regenerated from those artefacts by the plotting
+scripts under `scripts/`.
 
-## Key textual claims
+## Pipeline artefacts consumed by each class of manuscript output
 
-| Claim | Where it is computed |
-|-------|----------------------|
-| Dataset size (≈ 35,000 hourly records) | `aie.data.loader.load_raw_excel` (reports the final count in the log) |
-| Per-horizon skill of the AIE model     | `artifacts/default/metrics.csv` rows where `model == "aie"` |
-| Uncertainty calibration                | `artifacts/default/uq.npz` (`coverage` at nominal `levels`) |
-| Scenario sensitivity methodology       | Module docstring at the top of `aie/scenarios.py` and notebook 05 |
+| Manuscript output class                           | Pipeline artefact                                                                |
+|---------------------------------------------------|----------------------------------------------------------------------------------|
+| Study site and data description                   | `data/processed/seberang_jaya_hourly.parquet`                                    |
+| Training behaviour (loss curves)                  | `artifacts/default/models/*_history.json`                                        |
+| Deterministic forecast skill (RMSE, MAE, R², IOA) | `artifacts/default/metrics.csv`                                                  |
+| Probabilistic forecast skill (coverage, CRPS)     | `artifacts/default/uq.npz`                                                       |
+| Model predictions for scatter and reliability     | `artifacts/default/predictions/{persistence,xgboost,lstm,aie}.npz`               |
+| Scenario results                                  | `artifacts/default/scenarios.csv`                                                |
+
+## Scripts that regenerate figures and tables
+
+| Script                       | Purpose                                                                                   |
+|------------------------------|-------------------------------------------------------------------------------------------|
+| `scripts/make_figures.py`    | Regenerate publication figures at 300 dpi PNG plus PDF vector, into `figures/generated/`. |
+| `scripts/make_toc.py`        | Regenerate the table-of-contents graphic at 8 cm × 4 cm, in PNG, SVG, and PDF.            |
+
+The per-figure and per-table captions in the manuscript identify the
+generating script alongside each artefact. The captions are the
+authoritative mapping and are kept in sync with the scripts at submission
+time.
 
 ## Reproducibility protocol
 
@@ -42,10 +53,22 @@ Reviewers can use this table to verify reproducibility.
 conda env create -f environment.yml
 conda activate aie
 pip install -e ".[dev]"
-make all          # data -> train -> evaluate -> scenarios -> figures -> toc
+make all          # data -> train -> evaluate -> scenarios
 pytest -q
 ```
 
-The `make all` target is deterministic given the fixed seeds in
-`configs/default.yaml`; the same commit should reproduce the figures and
-tables bit-for-bit on the same hardware class.
+The run is deterministic given the fixed seeds in `configs/default.yaml`,
+the pinned versions in `environment.yml`, and the training protocol
+described in the Methods section of the manuscript. The same commit
+reproduces the headline metrics bit-for-bit on the same hardware class.
+
+## Reviewer notes
+
+- The raw observational dataset is not redistributed with this repository
+  (see `data/README.md` for the data-use agreement and access procedure).
+  The small sample dataset under `data/sample/` is provided solely for
+  continuous integration and smoke-testing and is explicitly marked as not
+  suitable for scientific inference.
+- The full trained model weights are retained under `artifacts/default/`
+  when the pipeline is run locally. They are archived alongside the code
+  in the Zenodo release for this version.

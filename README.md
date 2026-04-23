@@ -8,9 +8,9 @@
 
 Reference implementation for the manuscript
 
-> **Self-Optimizing Neural Architectures for Urban Air Quality Forecasting and
-> Exploratory Scenario Analysis: A Case Study of Seberang Jaya, Malaysia
-> (2018–2021).**
+> **Multi-horizon forecasting of urban PM₂.₅ with a dilated
+> temporal-convolution and transformer hybrid: skill, calibrated
+> uncertainty, and driver sensitivity at a tropical Malaysian site.**
 > 
 
 This repository provides:
@@ -148,22 +148,25 @@ from a fixed random seed; it is **not** suitable for scientific inference.
 
 ## Reproducing the paper
 
-Every figure and table in the manuscript is produced by a deterministic script.
-The full mapping is in [`docs/paper_to_code_mapping.md`](docs/paper_to_code_mapping.md).
+The full pipeline is orchestrated by the `Makefile` and reads its artefacts
+out of `artifacts/default/` after a complete run of `make all`.
 
-Short version:
+```bash
+make all          # data -> train -> evaluate -> scenarios
+```
 
-| Manuscript artefact                           | Command                                |
-|-----------------------------------------------|----------------------------------------|
-| Figures 1–2 (study area, data overview)       | `python scripts/make_figures.py eda`   |
-| Figure 3 (architecture diagram)               | `python scripts/make_figures.py arch`  |
-| Figures 4–6 (forecast-skill curves)           | `python scripts/make_figures.py skill` |
-| Figure 7 (calibration / uncertainty)          | `python scripts/make_figures.py uq`    |
-| Figures 8–9 (scenario sensitivity)            | `python scripts/make_figures.py scn`   |
-| Table 1 (metrics summary)                     | `python scripts/make_figures.py table` |
-| Table-of-contents graphic (8 cm × 4 cm)       | `python scripts/make_toc.py`           |
+Plotting scripts under `scripts/` then regenerate every figure and table
+from the pipeline artefacts:
 
-All outputs are written to `figures/` (PNG 300 dpi + PDF/SVG vector).
+| Script                        | Output kind                                                                 |
+|-------------------------------|-----------------------------------------------------------------------------|
+| `scripts/make_figures.py`     | Publication figures (PNG 300 dpi + PDF vector) into `figures/generated/`.   |
+| `scripts/make_toc.py`         | Table of contents graphic at 8 cm x 4 cm (PNG + SVG + PDF).                 |
+
+Individual manuscript figure and table captions name the exact generating
+script; the captions are the authoritative mapping.
+
+All outputs are written to `figures/generated/` (git-ignored).
 
 ---
 
@@ -226,6 +229,9 @@ governed by the provider's data-use agreement; see [Data](#data).
 ## Acknowledgements
 
 The authors thank the Department of Environment Malaysia (DOE / Jabatan Alam
-Sekitar) for providing the monitoring-station data used in this study.
-Computational resources and funding acknowledgements are listed in the
-manuscript.
+Sekitar) for providing the monitoring-station data used in this study. This
+research was supported by the Key Research Platforms and Projects of
+Ordinary Universities under the Guangdong Provincial Department of
+Education (grant number 2023ZDZX1049; Principal Investigator: Wei Lv). The
+authors also thank the open-source communities behind PyTorch, XGBoost,
+pandas, scikit-learn, and matplotlib.

@@ -56,8 +56,9 @@ Thumbs.db
 environment.local.yml
 # Never commit raw observational data
 data/raw/
-# Never commit manuscript drafts / private working copies
-# (canonical location: D:\Downloads\Research\SCI\Air Quality\Paper 2\private)
+# Never commit manuscript drafts or private working copies. The authors'
+# canonical working folder is kept outside this repository and is never
+# tracked, including in branches or submodules.
 manuscript*.md
 manuscript*.txt
 manuscript*.docx
