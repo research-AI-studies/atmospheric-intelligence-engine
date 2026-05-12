@@ -17,13 +17,13 @@ authors:
     family-names: Lai
     email: ngan.kuen@apu.edu.my
     affiliation: "Asia Pacific University of Technology & Innovation, Malaysia"
-  - given-names: Wei
-    family-names: Lv
-    email: luwei@zcst.edu.cn
-    affiliation: "Zhuhai College of Science and Technology, China"
   - given-names: Zhan-Fan
     family-names: Liang
     email: zhanfanfan419@foxmail.com
+    affiliation: "Zhuhai College of Science and Technology, China"
+  - given-names: Wei
+    family-names: Lv
+    email: luwei@zcst.edu.cn
     affiliation: "Zhuhai College of Science and Technology, China"
 contact:
   - given-names: Hai
@@ -63,10 +63,10 @@ preferred-citation:
       family-names: Chen
     - given-names: Ngan-Kuen
       family-names: Lai
-    - given-names: Wei
-      family-names: Lv
     - given-names: Zhan-Fan
       family-names: Liang
+    - given-names: Wei
+      family-names: Lv
   journal: "Environmental Science: Atmospheres"
   year: 2026
   doi: "10.1039/TBD"
